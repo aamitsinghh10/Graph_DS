@@ -1,0 +1,52 @@
+class Solution {
+public:
+    bool topological(int n,vector<vector<int>> &adj,vector<int> &res,vector<int> &indegree)
+    {
+        queue<int> q;//TOPOLOGICAL SORT(KAHN'S ALGORITHM)
+        for(int i=0;i<n;i++)
+        {
+            if(indegree[i]==0)
+                q.push(i);
+        }
+        int count=0;
+        while(!q.empty())
+        {
+            int curr=q.front();
+            q.pop();
+            
+            for(auto it:adj[curr])
+            {
+                indegree[it]--;
+                if(indegree[it]==0)
+                    q.push(it);
+            }
+            
+            res.push_back(curr);
+            count++;
+        }
+        if(count!=n)//checking for all Nodes that they form cycle or not
+            return false;
+        else
+            return true;
+    }
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) 
+    {
+        int n=prerequisites.size();
+        vector<vector<int>> adj(numCourses);
+        
+        vector<int> indegree(numCourses,0);
+        
+        for(int i=0;i<n;i++)
+        {
+            adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
+            
+            indegree[prerequisites[i][0]]+=1;
+        }
+        
+        vector<int> res;
+        
+        if(topological(numCourses,adj,res,indegree))
+            return res;
+       return {}; 
+    }
+};
