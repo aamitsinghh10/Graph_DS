@@ -1,0 +1,50 @@
+class Solution {
+public:
+   double dfs(unordered_map<string, vector<pair<string, double>>> &adj, unordered_map<string,int> visited, string start, string end)
+   {
+		if(adj.find(start)==adj.end()) 
+            return -1.0; 
+
+		if(start == end) 
+            return 1.0; 
+
+		visited[start]=1;
+
+		for(auto it: adj[start])
+        {
+			if(visited[it.first]==0)
+            {
+				double ans = dfs(adj,visited,it.first, end);
+
+				if(ans != -1.0)
+                {
+					return ans*it.second;
+				}
+			}
+		}
+		return -1.0;
+	} 
+    
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) 
+    {
+        unordered_map<string,vector<pair<string,double>>> adj;
+
+		for(int i=0;i<equations.size();i++)
+        {
+			adj[equations[i][0]].push_back({equations[i][1], values[i]});
+			adj[equations[i][1]].push_back({equations[i][0], 1/values[i]});
+		}
+
+		vector<double> result;
+
+		for(auto i: queries)
+        {
+            
+			unordered_map<string,int> visited;
+            
+			double ans = dfs(adj,visited,i[0],i[1]);
+			result.push_back(ans);
+		}
+		return result;
+	}
+};
