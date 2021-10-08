@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int findparent(int node,vector<int>parent)
+    {
+        if(node==parent[node])
+            return node;
+        return parent[node]=findparent(parent[node],parent);
+    }
+    
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) 
+    {
+        vector<int> parent(edges.size()+1);//1 based indexing is given
+        vector<int> ans;
+        
+        for(int i=1;i<parent.size();i++)
+        {
+            parent[i]=i;
+        }
+        for(auto it:edges)
+        {
+            int u=findparent(it[0],parent);
+            int v=findparent(it[1],parent);
+            
+            if(u!=v)
+                parent[u]=v;
+            else
+                ans={it[0],it[1]};
+        }
+        return ans;
+    }
+};
