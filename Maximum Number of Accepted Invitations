@@ -30,7 +30,7 @@ int matches = 0;
 for (int u = 0; u < m; u++)
  {
 vector<bool> visited(n, false);
-if (bipartiteMatch(grid, u, visited, grils))
+if (bipartiteMatch(grid, u, visited, girls))
 {
 matches++;
 }
