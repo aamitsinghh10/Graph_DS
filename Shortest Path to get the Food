@@ -1,0 +1,56 @@
+int getFood(vector<vector<char>> &grid)
+{
+   int m=grid.size();
+   int n=grid[0].size();
+
+   vector<vector<int>> dirs={{1,0},{-1,0},{0,1},{0,-1}};
+   queue<vector<int>> q;
+
+for(int i=0;i<m;i++)
+{
+   for(int j=0;j<n;j++)
+   {
+       if(grid[i][j]=='*')
+       {
+           q.push(vector<int>{i,j});
+           break;
+       }
+   }
+}
+int step=0;
+while(!q.empty())
+{
+   int size=q.size();
+   for(int i=0;i<size;i++)
+   {
+        vector<int> curr=q.top();
+        q.pop();
+        int x=curr[0];
+        int y=curr[1];
+        
+        if(grid[x][y]=='#')
+           return step;
+        
+        for(vector<int> dir:dirs)
+        {
+           int nx=x+dir[0];
+           int ny=y+dir[1];
+           
+           if(isvalid(grid,nx,ny)  && !visited[nx][ny])
+           {
+               visited[nx][ny]=true;
+               q.push{vector<int>{nx,ny}};
+           }
+        }
+      }
+      steps++;
+   }
+   return -1;
+}
+bool isvalid(vector<vector<char>> &grid,int i,int j)
+{
+    int m=grid.size();
+    int n=grid[0].size();
+    
+    return (i>=0 && i<m && j>=0 && j<n && !visited[i][j]!='X');
+}
