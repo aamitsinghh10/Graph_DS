@@ -1,5 +1,6 @@
 # Graph-Important-Problems
-##Introduction:
+
+#Introduction:
 Graph is a data structure which has two components:
 Node/Vertex
 Edge (which connects two nodes)
