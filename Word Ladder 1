@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) 
+    {
+        unordered_set<string> set;//set is just to remain track that
+        
+        queue<pair<string,int>> q;//queue is created as pair just to track which string is processed and its level count start from 1 or levels+1 if from zero(how many words are taken to reach the endword)
+        
+        for(int i=0;i<wordList.size();i++)
+        {
+            set.insert(wordList[i]);
+        }
+        q.push({beginWord,1});
+        
+        while(!q.empty())
+        {
+            auto curr=q.front();
+            q.pop();
+            
+            if(curr.first==endWord)
+                return curr.second;
+            
+            for(int i=0;i<curr.first.size();i++)
+            {
+                string temp=curr.first;//curr string which is in front of queue
+                
+                for(char c='a';c<='z';c++)//here checking every character of current string by replacing every character from 'a' to 'z' for every index of current string. If any of them is present then insert that string on queue and its level and erase it from the set as every character appear once
+                {
+                   temp[i]=c; 
+                    
+                   if(set.find(temp)!=set.end())
+                   {
+                       q.push({temp,curr.second+1});
+                       set.erase(temp);
+                   }
+                }
+            }
+        }
+        return 0;
+    }
+};
