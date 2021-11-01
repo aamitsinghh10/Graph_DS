@@ -1,0 +1,72 @@
+class Solution {
+public:
+    void dfs(string &beginWord, string &endWord,unordered_map<string,unordered_set<string>> & adj, vector<string> &path, vector<vector<string>>& ans)
+    {
+        path.push_back(beginWord);
+        
+        if(beginWord==endWord)
+        {
+            ans.push_back(path);
+            path.pop_back();//for backtrack
+            return;
+        }
+        
+        for(auto a:adj[beginWord])
+        {
+            dfs(a,endWord,adj,path,ans);
+        }
+        path.pop_back();//backtrack to access other words
+    }
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) 
+    {
+        //step-1: Finding Minimum depth using BFS
+        unordered_map<string,unordered_set<string>> adj;//to store child of parent string string(special adjacency List)
+        unordered_set<string> set;
+        queue<string> q;
+        unordered_map<string,int> visited;//basically to maintain depth and traverse only childs 
+        
+        for(int i=0;i<wordList.size();i++)
+        {
+            set.insert(wordList[i]);
+        }
+        q.push(beginWord);// Insert the begin word into the Queue
+        visited[beginWord]=0;
+        
+        while(! q.empty())
+        {
+            auto curr=q.front();
+            q.pop();
+            
+            string temp=curr;
+            
+            for(int i=0;i<curr.size();i++)//checking all characters of string
+            {
+                for(char c='a';c<='z';c++)
+                {
+                    temp[i]=c;
+                    
+                    if(set.find(temp)!=set.end())//check the current string is in set or not
+                    {
+                        if(visited.count(temp)==0)
+                        {
+                            visited[temp]=visited[curr]+1;//temp string depth is parent string depth+1
+                            q.push(temp);
+                            adj[curr].insert(temp);
+                        }
+                        else if(visited[temp]==visited[curr]+1)
+                        {
+                            adj[curr].insert(temp);
+                        }
+                    }
+                }
+                temp[i]=curr[i];//revert back to curr string
+            }
+        }
+        //step-2: Find all minimum depth paths using DFS
+        vector<vector<string>> ans;
+        vector<string> path;
+        dfs(beginWord,endWord,adj,path,ans);
+        
+        return ans;
+    }
+};
