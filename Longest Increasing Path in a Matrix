@@ -1,0 +1,96 @@
+//Shows TLE
+ vector<vector<int>> dir={{-1,0},{1,0},{0,-1},{0,1}};
+    int dfs(vector<vector<int>> & matrix ,int i,int j)
+    {
+        int maxi=0;
+        
+        for(vector<int> d:dir)
+        {
+            int nx=i+d[0];
+            int ny=j+d[1];
+            
+        if(nx>=0 && ny>=0 && nx<matrix.size() && ny<matrix[0].size() && matrix[nx][ny]>matrix[i][j])
+                maxi=max(maxi,dfs(matrix,nx,ny));
+        }
+        return maxi+1;
+    }
+    int longestIncreasingPath(vector<vector<int>>& matrix) 
+    {
+        int longest=0;
+        int row=matrix.size();
+        int col=matrix[0].size();
+        
+        for(int i=0;i<row;i++)
+        {
+            for(int j=0;j<col;j++)
+            {
+                int path=dfs(matrix,i,j);
+                longest=max(longest,path);
+            }
+        }
+        return longest;
+    }
+};
+
+
+
+//dp code
+Memoization
+class Solution {
+public:
+    vector<vector<int>> dir={{-1,0},{1,0},{0,-1},{0,1}};
+    int dfs(vector<vector<int>> & matrix ,int i,int j,vector<vector<int>> &mem)
+    {
+        int maxi=0;
+        if(mem[i][j]!=0)
+            return mem[i][j];
+        
+        for(vector<int> d:dir)
+        {
+            int nx=i+d[0];
+            int ny=j+d[1];
+            
+        if(nx>=0 && ny>=0 && nx<matrix.size() && ny<matrix[0].size() && matrix[nx][ny]>matrix[i][j])
+                maxi=max(maxi,dfs(matrix,nx,ny,mem));
+        }
+        mem[i][j]= maxi+1;
+        return maxi+1;
+    }
+    int longestIncreasingPath(vector<vector<int>>& matrix) 
+    {
+        int longest=0;
+        int row=matrix.size();
+        int col=matrix[0].size();
+        
+        vector<vector<int>> mem(row,vector<int> (col,0));
+        for(int i=0;i<row;i++)
+        {
+            for(int j=0;j<col;j++)
+            {
+                int path=dfs(matrix,i,j,mem);
+                longest=max(longest,path);
+            }
+        }
+        return longest;
+    }
+};
+
+
+//dp optimized code
+int dp[200][200]; // constraints are small enough that we can just set them to MAX
+int cnt, n, m;
+int longestIncreasingPath(vector<vector<int>>& matrix) {
+	cnt = 0, n = size(matrix), m = size(matrix[0]);
+	for(int i = 0; i < n; i++)
+		for(int j = 0; j < m; j++)
+			cnt = max(cnt, solve(matrix, i, j, -1));            
+	return cnt;
+}
+int solve(vector<vector<int>>& mat, int i, int j, int prev){
+	if(i < 0 || j < 0 || i >= n || j >= m || mat[i][j] <= prev) return 0;
+	if(dp[i][j]) return dp[i][j];
+	return dp[i][j] = 1 + max({ solve(mat, i + 1, j, mat[i][j]),
+							    solve(mat, i - 1, j, mat[i][j]),
+							    solve(mat, i, j + 1, mat[i][j]),
+							    solve(mat, i, j - 1, mat[i][j]) });       
+}
